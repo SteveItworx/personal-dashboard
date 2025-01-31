@@ -49,7 +49,7 @@ export default function TodoList() {
         </FormControl>
 
         {/* Add Task Button */}
-        <Button variant="contained" color="primary" fullWidth onClick={handleAddTask}>
+        <Button variant="contained" color="secondary" fullWidth onClick={handleAddTask}>
           Add Task
         </Button>
 

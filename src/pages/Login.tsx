@@ -53,9 +53,10 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <Button type="submit" variant="contained" color="primary" fullWidth>
+          <Button type="submit" variant="contained" color="secondary"  fullWidth>
             Login
           </Button>
+          <Button onClick={() => navigate("/register")} fullWidth>Register</Button>
         </form>
       </Paper>
     </Container>

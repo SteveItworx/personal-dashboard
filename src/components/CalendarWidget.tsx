@@ -105,7 +105,7 @@ export default function CalendarWidget() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-          <Button onClick={handleAddEvent} variant="contained" color="primary">
+          <Button onClick={handleAddEvent} variant="contained" color="secondary">
             Add Event
           </Button>
         </DialogActions>
