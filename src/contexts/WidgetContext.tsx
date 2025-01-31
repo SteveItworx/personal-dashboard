@@ -14,7 +14,7 @@ interface WidgetContextType {
 const WidgetContext = createContext<WidgetContextType | undefined>(undefined);
 
 export const WidgetProvider = ({ children }: { children: ReactNode }) => {
-  const [widgets, setWidgets] = useState<WidgetType[]>(["Weather", "ToDoList", "News"]); // Default widgets
+  const [widgets, setWidgets] = useState<WidgetType[]>(["Weather", "ToDoList"]); // Default widgets
 
   // Load saved widgets from localStorage
   useEffect(() => {
