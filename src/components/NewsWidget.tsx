@@ -33,7 +33,7 @@ export default function NewsWidget() {
       </FormControl>
 
       {/* News Articles */}
-      {news.map((article, index) => (
+      {news.slice(0, 3).map((article, index) => (
         <Card key={index} sx={{ display: "flex", marginTop: 2 }}>
           {article.urlToImage && (
             <CardMedia component="img" sx={{ width: 150 }} image={article.urlToImage} alt="News Image" />
