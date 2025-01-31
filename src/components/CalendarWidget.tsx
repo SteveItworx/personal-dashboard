@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCalendar } from "../contexts/CalendarContext";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -26,6 +26,11 @@ export default function CalendarWidget() {
   const [openDialog, setOpenDialog] = useState(false);
   const [eventTitle, setEventTitle] = useState("");
   const [eventDescription, setEventDescription] = useState("");
+  const [filteredEvents, setFilteredEvents] = useState(events);
+
+  useEffect(() => {
+    setFilteredEvents(events.filter((event) => event.date === selectedDate.toISOString().split("T")[0]));
+  }, [events, selectedDate]);
 
   const handleDateChange = (date: Date) => {
     setSelectedDate(date);
@@ -54,7 +59,7 @@ export default function CalendarWidget() {
       <Paper elevation={3} sx={{ padding: 3, marginTop: 3 }}>
         <Calendar onClickDay={handleDateChange} />
         <Box textAlign="center" mt={2}>
-          <Button variant="contained" color="primary" onClick={handleOpenDialog}>
+          <Button variant="contained" color="secondary" onClick={handleOpenDialog}>
             Add Event
           </Button>
         </Box>
@@ -63,10 +68,13 @@ export default function CalendarWidget() {
       {/* Event List */}
       <Paper elevation={3} sx={{ padding: 3, marginTop: 3 }}>
         <Typography variant="h6">Scheduled Events</Typography>
-        <List>
-          {events
-            .filter((event) => event.date === selectedDate.toISOString().split("T")[0])
-            .map((event) => (
+        {filteredEvents.length === 0 ? (
+          <Typography variant="body2" color="textSecondary" sx={{ textAlign: "center", marginTop: 2 }}>
+            No events for this date.
+          </Typography>
+        ) : (
+          <List>
+            {filteredEvents.map((event) => (
               <ListItem
                 key={event.id}
                 secondaryAction={
@@ -78,7 +86,8 @@ export default function CalendarWidget() {
                 <ListItemText primary={event.title} secondary={event.description} />
               </ListItem>
             ))}
-        </List>
+          </List>
+        )}
       </Paper>
 
       {/* Add Event Dialog */}
@@ -104,7 +113,7 @@ export default function CalendarWidget() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+          <Button onClick={() => setOpenDialog(false)} color="secondary">Cancel</Button>
           <Button onClick={handleAddEvent} variant="contained" color="secondary">
             Add Event
           </Button>

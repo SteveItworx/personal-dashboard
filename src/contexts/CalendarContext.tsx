@@ -1,10 +1,14 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { collection, addDoc, deleteDoc, doc, getDocs, query, where } from "firebase/firestore";
+import { db } from "../firebaseConfig";
+import { useAuth } from "./AuthContext"; // Ensure user is authenticated
 
 interface Event {
   id: string;
   date: string;
   title: string;
   description: string;
+  userId: string;
 }
 
 interface CalendarContextType {
@@ -16,29 +20,46 @@ interface CalendarContextType {
 const CalendarContext = createContext<CalendarContextType | undefined>(undefined);
 
 export const CalendarProvider = ({ children }: { children: ReactNode }) => {
+  const { user } = useAuth(); // Get the authenticated user
   const [events, setEvents] = useState<Event[]>([]);
 
-  // Load events from localStorage
+  // Fetch user's events from Firestore
   useEffect(() => {
-    const storedEvents = localStorage.getItem("events");
-    if (storedEvents) {
-      setEvents(JSON.parse(storedEvents));
+    if (!user) return;
+
+    const fetchEvents = async () => {
+      const q = query(collection(db, "calendarEvents"), where("userId", "==", user.uid));
+      const querySnapshot = await getDocs(q);
+      const userEvents = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Event));
+      setEvents(userEvents);
+    };
+
+    fetchEvents();
+  }, [user]);
+
+  // Add a new event to Firestore
+  const addEvent = async (date: string, title: string, description: string) => {
+    if (!user) return;
+
+    try {
+      const newEvent = { date, title, description, userId: user.uid };
+      const docRef = await addDoc(collection(db, "calendarEvents"), newEvent);
+      setEvents([...events, { id: docRef.id, ...newEvent }]);
+    } catch (error) {
+      console.error("Error adding event:", error);
     }
-  }, []);
-
-  // Save events to localStorage
-  useEffect(() => {
-    localStorage.setItem("events", JSON.stringify(events));
-  }, [events]);
-
-  // Add an event
-  const addEvent = (date: string, title: string, description: string) => {
-    setEvents([...events, { id: Date.now().toString(), date, title, description }]);
   };
 
-  // Delete an eventa
-  const deleteEvent = (id: string) => {
-    setEvents(events.filter((event) => event.id !== id));
+  // Delete event from Firestore
+  const deleteEvent = async (id: string) => {
+    if (!user) return;
+
+    try {
+      await deleteDoc(doc(db, "calendarEvents", id));
+      setEvents(events.filter((event) => event.id !== id));
+    } catch (error) {
+      console.error("Error deleting event:", error);
+    }
   };
 
   return (
@@ -48,6 +69,7 @@ export const CalendarProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// Custom hook to use CalendarContext
 export const useCalendar = () => {
   const context = useContext(CalendarContext);
   if (!context) throw new Error("useCalendar must be used within a CalendarProvider");
