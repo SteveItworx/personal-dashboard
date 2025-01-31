@@ -6,11 +6,12 @@ import {
   Button,
   Paper,
   IconButton,
-  Select,
   FormControl,
-  InputLabel,
-  MenuItem,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
   Grid,
+  Box,
 } from "@mui/material";
 import WeatherWidget from "../components/WeatherWidget";
 import TodoList from "../components/TodoList";
@@ -31,10 +32,19 @@ export default function Dashboard() {
   };
 
   const { mode, toggleTheme } = useThemeCustom();
-  const { widgets, setWidgets, addWidget, removeWidget } = useWidgets();
+  const { widgets, addWidget, removeWidget } = useWidgets();
+
+  const handleWidgetChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const widget = event.target.name as "Weather" | "ToDoList" | "News" | "Calendar";
+    if (event.target.checked) {
+      addWidget(widget);
+    } else {
+      removeWidget(widget);
+    }
+  };
 
   return (
-    <Container component="main" maxWidth="lg">
+    <Container component="main" sx={{ width: "100%" }}>
       {/* Dark Mode Toggle */}
       <IconButton onClick={toggleTheme} sx={{ mt: 2 }}>
         {mode === "dark" ? <LightMode /> : <DarkMode />}
@@ -53,14 +63,27 @@ export default function Dashboard() {
       </Paper>
 
       {/* Widget Selector */}
-      <FormControl fullWidth sx={{ marginTop: 2 }}>
-        <InputLabel>Add Widget</InputLabel>
-        <Select onChange={(e) => addWidget(e.target.value as "Weather" | "ToDoList" | "News" | "Calendar")}>
-          <MenuItem value="Weather">Weather</MenuItem>
-          <MenuItem value="ToDoList">To-Do List</MenuItem>
-          <MenuItem value="News">News</MenuItem>
-          <MenuItem value="Calendar">Calendar</MenuItem>
-        </Select>
+      <FormControl component="fieldset" sx={{ marginTop: 2 }}>
+        <Typography variant="h6">Select Widgets</Typography>
+        <Box display="flex" flexDirection="row" gap={2}>
+          <FormControlLabel
+            control={<Checkbox checked={widgets.includes("Weather")} onChange={handleWidgetChange} name="Weather" />}
+            label="Weather"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={widgets.includes("ToDoList")} onChange={handleWidgetChange} name="ToDoList" />}
+            label="To-Do List"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={widgets.includes("News")} onChange={handleWidgetChange} name="News" />}
+            label="News"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={widgets.includes("Calendar")} onChange={handleWidgetChange} name="Calendar" />}
+            label="Calendar"
+          />
+       
+        </Box>
       </FormControl>
 
       {/* Display Widgets in Grid Layout */}
@@ -70,9 +93,6 @@ export default function Dashboard() {
             <Paper elevation={2} sx={{ padding: 2 }}>
               <Typography variant="h6">Weather</Typography>
               <WeatherWidget />
-              <IconButton onClick={() => removeWidget("Weather")} color="error">
-                <DeleteIcon />
-              </IconButton>
             </Paper>
           </Grid>
         )}
@@ -82,9 +102,6 @@ export default function Dashboard() {
             <Paper elevation={2} sx={{ padding: 2 }}>
               <Typography variant="h6">To-Do List</Typography>
               <TodoList />
-              <IconButton onClick={() => removeWidget("ToDoList")} color="error">
-                <DeleteIcon />
-              </IconButton>
             </Paper>
           </Grid>
         )}
@@ -94,21 +111,15 @@ export default function Dashboard() {
             <Paper elevation={2} sx={{ padding: 2 }}>
               <Typography variant="h6">Calendar</Typography>
               <CalendarWidget />
-              <IconButton onClick={() => removeWidget("Calendar")} color="error">
-                <DeleteIcon />
-              </IconButton>
             </Paper>
           </Grid>
         )}
 
         {widgets.includes("News") && (
-          <Grid item xs={12} sm={8} md={6}>
+          <Grid item xs={12} sm={6} md={6}>
             <Paper elevation={2} sx={{ padding: 2 }}>
               <Typography variant="h6">News</Typography>
               <NewsWidget />
-              <IconButton onClick={() => removeWidget("News")} color="error">
-                <DeleteIcon />
-              </IconButton>
             </Paper>
           </Grid>
         )}
