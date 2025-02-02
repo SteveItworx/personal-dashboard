@@ -22,7 +22,7 @@ import NewsWidget from "../components/NewsWidget";
 import CalendarWidget from "../components/CalendarWidget";
 import { DarkMode, LightMode } from "@mui/icons-material";
 import { useThemeCustom } from "../contexts/ThemeContext";
-import { useWidgets } from "../contexts/WidgetContext";
+import { useWidgets, WidgetType } from "../contexts/WidgetContext";
 
 const widgetComponents = {
   Weather: <WeatherWidget />,
@@ -132,7 +132,7 @@ export default function Dashboard() {
                 key={widget}
                 control={
                   <Checkbox
-                    checked={widgets.includes(widget)}
+                    checked={widgets.includes(widget as WidgetType)}
                     onChange={handleWidgetChange}
                     name={widget}
                     color="secondary"

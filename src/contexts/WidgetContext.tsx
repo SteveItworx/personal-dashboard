@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 // Define available widget types
-type WidgetType = "Weather" | "ToDoList" | "News" | "Calendar";
+export type WidgetType = "Weather" | "ToDoList" | "News" | "Calendar";
 
 interface WidgetContextType {
   widgets: WidgetType[];
