@@ -35,7 +35,7 @@ export default function TodoList() {
   const filteredTasks = filterPriority === "All" ? tasks : tasks.filter((task) => task.priority === filterPriority);
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="md">
       <Paper elevation={3} sx={{ padding: 3, marginTop: 5, textAlign: "center" }}>
         <Typography variant="h5" sx={{ marginBottom: 2 }}>
           To-Do List
@@ -53,7 +53,7 @@ export default function TodoList() {
 
         {/* Priority Selection */}
         <FormControl fullWidth margin="normal">
-          <InputLabel>Priority</InputLabel>
+          <InputLabel variant="filled">Priority</InputLabel>
           <Select
             value={selectedPriority}
             onChange={(e) => setSelectedPriority(e.target.value as "High" | "Medium" | "Low")}
@@ -73,7 +73,7 @@ export default function TodoList() {
 
         {/* Priority Filter */}
         <FormControl fullWidth margin="normal">
-          <InputLabel>Filter by Priority</InputLabel>
+          <InputLabel variant="filled">Filter by Priority</InputLabel>
           <Select value={filterPriority} onChange={(e) => setFilterPriority(e.target.value)}>
             <MenuItem value="All">All</MenuItem>
             {priorities.map((priority) => (

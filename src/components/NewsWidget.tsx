@@ -23,7 +23,7 @@ export default function NewsWidget() {
       {/* News Category Selector */}
       <FormControl fullWidth margin="normal">
         <InputLabel variant="filled">News Category</InputLabel>
-        <Select value={category} onChange={(e) => setCategory(e.target.value)}>
+        <Select   sx={{ textAlign: "center" }} value={category} onChange={(e) => setCategory(e.target.value)}>
           {categories.map((cat) => (
             <MenuItem key={cat.value} value={cat.value}>
               {cat.label}
