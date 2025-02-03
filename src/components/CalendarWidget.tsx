@@ -22,14 +22,18 @@ import { Delete as DeleteIcon } from "@mui/icons-material";
 
 export default function CalendarWidget() {
   const { events, addEvent, deleteEvent } = useCalendar();
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const today = new Date();
+  const [selectedDate, setSelectedDate] = useState<Date | null>(today);
   const [openDialog, setOpenDialog] = useState(false);
   const [eventTitle, setEventTitle] = useState("");
   const [eventDescription, setEventDescription] = useState("");
   const [filteredEvents, setFilteredEvents] = useState(events);
 
   useEffect(() => {
-    setFilteredEvents(events.filter((event) => event.date === selectedDate.toISOString().split("T")[0]));
+    const selectedDateString = selectedDate
+      ? selectedDate.toLocaleDateString("en-AU")
+      : today.toLocaleDateString("en-AU");
+    setFilteredEvents(events.filter((event) => event.date === selectedDateString));
   }, [events, selectedDate]);
 
   const handleDateChange = (date: Date) => {
@@ -41,8 +45,8 @@ export default function CalendarWidget() {
   };
 
   const handleAddEvent = () => {
-    if (eventTitle.trim()) {
-      addEvent(selectedDate.toISOString().split("T")[0], eventTitle, eventDescription);
+    if (eventTitle.trim() && selectedDate) {
+      addEvent(selectedDate.toLocaleDateString("en-AU"), eventTitle, eventDescription);
       setEventTitle("");
       setEventDescription("");
       setOpenDialog(false);
@@ -94,10 +98,11 @@ export default function CalendarWidget() {
       {/* Add Event Dialog */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Add Event</DialogTitle>
-        <DialogContent>
-          <Typography variant="body2" sx={{ mb: 2 }}>
-            Selected Date: {selectedDate.toDateString()}
-          </Typography>
+        <DialogContent> 
+          { selectedDate ? <Typography variant="body2" sx={{ mb: 2 }}>
+            Selected Date: {selectedDate.toLocaleDateString("en-AU")}
+          </Typography> : null }
+          
           <TextField
             label="Event Title"
             fullWidth
