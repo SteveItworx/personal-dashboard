@@ -5,7 +5,6 @@ import {
   Container,
   Typography,
   Button,
-  Paper,
   IconButton,
   FormControl,
   FormControlLabel,
@@ -15,7 +14,12 @@ import {
   AppBar,
   Toolbar,
 } from "@mui/material";
-import { DndContext, useDraggable, useDroppable, DragEndEvent } from "@dnd-kit/core";
+import {
+  DndContext,
+  useDraggable,
+  useDroppable,
+  DragEndEvent,
+} from "@dnd-kit/core";
 import WeatherWidget from "../components/WeatherWidget";
 import TodoList from "../components/TodoList";
 import NewsWidget from "../components/NewsWidget";
@@ -32,12 +36,21 @@ const widgetComponents = {
 };
 
 // Draggable Widget Component (Only Active When Moving Mode is Enabled)
-const DraggableWidget: React.FC<{ id: string; children: React.ReactNode; isMoving: boolean }> = ({ id, children, isMoving }) => {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({ id, disabled: !isMoving });
+const DraggableWidget: React.FC<{
+  id: string;
+  children: React.ReactNode;
+  isMoving: boolean;
+}> = ({ id, children, isMoving }) => {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id,
+    disabled: !isMoving,
+  });
   const { setNodeRef: setDropRef } = useDroppable({ id });
 
   const style: React.CSSProperties = {
-    transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
+    transform: transform
+      ? `translate(${transform.x}px, ${transform.y}px)`
+      : undefined,
     transition: transform ? "none" : "transform 0.2s ease",
     cursor: isMoving ? "grab" : "default",
     pointerEvents: isMoving ? "auto" : "auto", // Allow interactions when not moving
@@ -56,7 +69,7 @@ const DraggableWidget: React.FC<{ id: string; children: React.ReactNode; isMovin
       style={style}
       {...(isMoving ? { ...listeners, ...attributes } : {})} // Apply listeners only when moving mode is active
     >
-      <Paper elevation={2} sx={{ padding: 2 }}>{children}</Paper>
+      {children}
     </Grid>
   );
 };
@@ -115,7 +128,11 @@ export default function Dashboard() {
             <IconButton onClick={toggleTheme}>
               {mode === "dark" ? <LightMode /> : <DarkMode />}
             </IconButton>
-            <Button variant="contained" color="secondary" onClick={handleLogout}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleLogout}
+            >
               Logout
             </Button>
           </Box>
@@ -147,11 +164,19 @@ export default function Dashboard() {
         {/* Move & Save Buttons */}
         <Box display="flex" justifyContent="flex-end" marginTop={2}>
           {!isMoving ? (
-            <Button variant="contained" color="primary" onClick={() => setIsMoving(true)}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setIsMoving(true)}
+            >
               Move Widgets
             </Button>
           ) : (
-            <Button variant="contained" color="success" onClick={() => setIsMoving(false)}>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={() => setIsMoving(false)}
+            >
               Save Layout
             </Button>
           )}
@@ -163,7 +188,6 @@ export default function Dashboard() {
             {widgetOrder.map((widget) =>
               widgets.includes(widget) ? (
                 <DraggableWidget key={widget} id={widget} isMoving={isMoving}>
-                  <Typography variant="h6">{widget}</Typography>
                   {widgetComponents[widget]}
                 </DraggableWidget>
               ) : null

@@ -51,6 +51,7 @@ export default function CalendarWidget() {
 
   return (
     <Container maxWidth="sm">
+      <Paper elevation={3} sx={{ padding: 3, marginTop: 5, textAlign: "center" }}>
       <Typography variant="h5" sx={{ marginTop: 3, textAlign: "center" }}>
         Calendar
       </Typography>
@@ -119,6 +120,7 @@ export default function CalendarWidget() {
           </Button>
         </DialogActions>
       </Dialog>
+      </Paper>
     </Container>
   );
 }

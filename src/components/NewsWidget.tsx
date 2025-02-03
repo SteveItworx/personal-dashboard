@@ -1,5 +1,5 @@
 import { useNews } from "../contexts/NewsContext";
-import { Container, Typography, Card, CardContent, CardMedia, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import { Container, Typography, Card, CardContent, CardMedia, Select, MenuItem, FormControl, InputLabel, Paper } from "@mui/material";
 
 const categories = [
   { label: "General", value: "general" },
@@ -16,6 +16,8 @@ export default function NewsWidget() {
 
   return (
     <Container maxWidth="md">
+      <Paper elevation={3}
+        sx={{ padding: 3, marginTop: 5, textAlign: "center" }}>
       <Typography variant="h5" sx={{ marginTop: 3, textAlign: "center" }}>
         Latest News
       </Typography>
@@ -51,6 +53,7 @@ export default function NewsWidget() {
           </CardContent>
         </Card>
       ))}
+      </Paper>
     </Container>
   );
 }
